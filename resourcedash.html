@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>ResourceDash</title>
+  <link href="resourcedash.css" rel="stylesheet">
+  <link rel="stylesheet" href="lib/font-awesome.min.css">
+  <!-- Load Masonry first -->
+  <script src="lib/masonry.pkgd.min.js"></script>
+</head>
+<body>
+  <!-- Theme Switch -->
+  <div class="theme-switch">
+    <button id="light-theme" class="active">
+      <i class="fa fa-sun-o"></i>
+    </button>
+    <button id="dark-theme">
+      <i class="fa fa-moon-o"></i>
+    </button>
+  </div>
+
+  <div id="top-row">
+    <div id="nowbox">
+      <div id="clockbox"></div>
+      <div id="daybox"></div>
+      <div id="datebox"></div>
+      <!-- Music Player Open Button -->
+      <button id="open-music-player" class="music-player-open-btn" title="Open Music Player">
+        <i class="fa fa-music"></i> MP
+      </button>
+      <!-- Knowledge Base Open Button -->
+      <button id="open-knowledge-base" class="knowledge-base-open-btn" title="Open Knowledge Base">
+        <i class="fa fa-database"></i> KB
+      </button>
+    </div>
+    <div id="countdownbox">
+      <div id="countdownbox-justifier">
+        <div id="countdown-day" class="countdown-segment">
+          <div class="countdown-icon"><i class="fa fa-sun-o"></i></div>
+          <div id="countdown-day-amount" class="countdown-amount"></div>
+          <div class="countdown-label">Day Progress</div>
+          <div id="day-remaining" class="remaining-time"></div>
+          <div class="countdown-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="day-progress-fill"></div>
+            </div>
+          </div>
+        </div>
+        <div id="countdown-month" class="countdown-segment">
+          <div class="countdown-icon"><i class="fa fa-calendar"></i></div>
+          <div id="countdown-month-amount" class="countdown-amount"></div>
+          <div class="countdown-label">Month Progress</div>
+          <div id="month-remaining" class="remaining-time"></div>
+          <div class="countdown-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="month-progress-fill"></div>
+            </div>
+          </div>
+        </div>
+        <div id="countdown-year" class="countdown-segment">
+          <div class="countdown-icon"><i class="fa fa-calendar-check-o"></i></div>
+          <div id="countdown-year-amount" class="countdown-amount"></div>
+          <div class="countdown-label">Year Progress</div>
+          <div id="year-remaining" class="remaining-time"></div>
+          <div class="countdown-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="year-progress-fill"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music Player Modal -->
+  <div id="music-player-modal" class="music-player-modal" style="display:none;">
+    <div class="music-player-header">
+      <span class="music-player-title"><i class="fa fa-music"></i> Music Player</span>
+      <div class="music-player-header-actions">
+        <button id="music-player-minimize" class="music-player-minimize-btn" title="Minimize"><i class="fa fa-minus"></i></button>
+        <button id="music-player-maximize" class="music-player-maximize-btn" title="Maximize" style="display:none;"><i class="fa fa-square-o"></i></button>
+        <button id="close-music-player" class="music-player-close-btn" title="Close">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <div class="music-player-body">
+      <div class="music-player-info">
+        <div class="music-player-song-title" id="music-player-song-title">No Song</div>
+        <div class="music-player-progress">
+          <span id="music-player-current-time">0:00</span>
+          <input type="range" id="music-player-progress-bar" min="0" max="100" value="0">
+          <span id="music-player-duration">0:00</span>
+        </div>
+        <div class="music-player-controls">
+          <button id="music-player-shuffle" class="music-player-ctrl-btn" title="Shuffle"><i class="fa fa-random"></i></button>
+          <button id="music-player-prev" class="music-player-ctrl-btn"><i class="fa fa-step-backward"></i></button>
+          <button id="music-player-play" class="music-player-ctrl-btn"><i class="fa fa-play"></i></button>
+          <button id="music-player-next" class="music-player-ctrl-btn"><i class="fa fa-step-forward"></i></button>
+          <button id="music-player-repeat" class="music-player-ctrl-btn" title="Repeat"><i class="fa fa-repeat"></i></button>
+        </div>
+        <div class="music-player-volume">
+          <i class="fa fa-volume-up"></i>
+          <input type="range" id="music-player-volume-bar" min="0" max="100" value="70">
+          <span id="music-player-volume-label">70%</span>
+        </div>
+        <div class="music-player-file-input">
+          <input type="file" id="music-player-file-input" accept="audio/*" multiple>
+          <label for="music-player-file-input" class="music-player-add-btn"><i class="fa fa-plus"></i> Add Songs</label>
+        </div>
+        <div class="music-player-playlist-section">
+          <div class="music-player-playlist-header">
+            <span>Playlist</span>
+            <button id="music-player-sort" class="music-player-sort-btn" title="Sort"><i class="fa fa-sort"></i></button>
+          </div>
+          <ul id="music-player-playlist" class="music-player-playlist"></ul>
+        </div>
+      </div>
+      <audio id="music-player-audio" preload="metadata"></audio>
+    </div>
+  </div>
+
+  <!-- Knowledge Base Modal -->
+  <div id="knowledge-base-modal" class="knowledge-base-modal" style="display:none;">
+    <div class="knowledge-base-header">
+      <span class="knowledge-base-title"><i class="fa fa-database"></i> Knowledge Base</span>
+      <div class="knowledge-base-header-actions">
+        <button id="knowledge-base-minimize" class="knowledge-base-minimize-btn" title="Minimize"><i class="fa fa-minus"></i></button>
+        <button id="knowledge-base-maximize" class="knowledge-base-maximize-btn" title="Maximize" style="display:none;"><i class="fa fa-square-o"></i></button>
+        <button id="close-knowledge-base" class="knowledge-base-close-btn" title="Close">
+          <i class="fa fa-times"></i>
+        </button>
+      </div>
+    </div>
+    <div class="knowledge-base-body">
+      <div class="knowledge-base-tabs">
+        <!-- Tabs will be dynamically added here -->
+        <div class="knowledge-base-tabs-list" id="knowledge-base-tabs-list"></div>
+        <button id="add-knowledge-base-tab" class="knowledge-base-add-tab-btn" title="Add Tab"><i class="fa fa-plus"></i></button>
+      </div>
+      <div class="knowledge-base-table-container" id="knowledge-base-table-container">
+        <!-- Table will be dynamically rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Note Input -->
+  <div class="note-input-container">
+    <div class="note-input" id="note-input">
+      <input type="text" class="note-title" placeholder="Take a note..." />
+      <textarea class="note-content" style="display: none;" placeholder="Note content"></textarea>
+      <div class="task-progress" style="display: none;">
+        <button class="progress-option progress-new" data-status="new">New</button>
+        <button class="progress-option progress-in-progress" data-status="in-progress">In Progress</button>
+        <button class="progress-option progress-completed" data-status="completed">Completed</button>
+      </div>
+      <div class="eisenhower-matrix" style="display: none;">
+        <div class="matrix-options">
+          <button class="matrix-option urgent-important" data-matrix="urgent-important">
+            <i class="fa fa-exclamation-circle"></i>
+            Urgent & Important
+          </button>
+          <button class="matrix-option important" data-matrix="important">
+            <i class="fa fa-star"></i>
+            Important
+          </button>
+          <button class="matrix-option urgent" data-matrix="urgent">
+            <i class="fa fa-clock-o"></i>
+            Urgent
+          </button>
+          <button class="matrix-option neither" data-matrix="neither">
+            <i class="fa fa-circle-o"></i>
+            Neither
+          </button>
+        </div>
+      </div>
+      <div class="note-labels" style="display: none;"></div>
+      <div class="label-input" style="display: none;">
+        <input 
+          type="text" 
+          class="new-label-input" 
+          placeholder="Add label (press Enter)"
+          aria-label="Add new label"
+        />
+      </div>
+      <div class="note-actions" style="display: none;">
+        <div class="note-tools">
+          <button class="note-action" title="Bold" id="bold-btn"><i class="fa fa-bold"></i></button>
+          <button class="note-action" title="Italic" id="italic-btn"><i class="fa fa-italic"></i></button>
+          <button class="note-action" title="Checkbox" id="checkbox-btn"><i class="fa fa-check-square-o"></i></button>
+          <button class="note-action" title="Add List Item">
+            <i class="fa fa-list"></i>
+          </button>
+          <button class="note-action" title="Add Link">
+            <i class="fa fa-link"></i>
+          </button>
+          <button class="note-action" title="Add Label">
+            <i class="fa fa-tag"></i>
+          </button>
+        </div>
+        <div class="note-buttons">
+          <button class="cancel-note">Cancel</button>
+          <button class="save-note"><i class="fa fa-save"></i> Save Note</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link Dialog -->
+  <div class="link-dialog" id="link-dialog">
+    <input type="text" placeholder="Text to display" id="link-text" />
+    <input type="text" placeholder="URL" id="link-url" />
+    <div class="link-dialog-buttons">
+      <button class="cancel-link" id="cancel-link">Cancel</button>
+      <button class="add-link" id="add-link">Add Link</button>
+    </div>
+  </div>
+
+  <!-- Notes Grid -->
+  <div class="notes-container">
+    <div class="notes-grid" id="notes-grid">
+      <!-- Notes will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Sidebar Toggle Button -->
+  <button id="sidebar-toggle" class="sidebar-toggle" aria-label="Open sidebar">
+    <i class="fa fa-bars"></i>
+  </button>
+
+  <!-- Sidebar Overlay -->
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+
+  <!-- Floating Collapsible Sidebar -->
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">RD</div>
+      <div class="sidebar-title">ResourceDash</div>
+      <button id="sidebar-close" class="sidebar-close" aria-label="Close sidebar">
+        <i class="fa fa-chevron-left"></i>
+      </button>
+    </div>
+    <div class="sidebar-search">
+      <input type="text" id="sidebar-search-input" placeholder="Search..." />
+      <i class="fa fa-search"></i>
+    </div>
+    <nav class="sidebar-menu">
+      <ul>
+        <li class="sidebar-section-header">View</li>
+        <li><button class="sidebar-menu-item active" data-filter="all"><i class="fa fa-sticky-note-o"></i> All Notes</button></li>
+        <li><button class="sidebar-menu-item" data-filter="tasks"><i class="fa fa-tasks"></i> Tasks</button></li>
+        <li><button class="sidebar-menu-item" data-filter="notes"><i class="fa fa-file-text-o"></i> Notes</button></li>
+        <li class="sidebar-section-header">Priority</li>
+        <li><button class="sidebar-menu-item" data-filter="urgent-important"><i class="fa fa-exclamation-circle"></i> Urgent & Important</button></li>
+        <li><button class="sidebar-menu-item" data-filter="important"><i class="fa fa-star"></i> Important</button></li>
+        <li><button class="sidebar-menu-item" data-filter="urgent"><i class="fa fa-clock-o"></i> Urgent</button></li>
+        <li class="sidebar-section-header">Task Status</li>
+        <li><button class="sidebar-menu-item" data-filter="new"><i class="fa fa-plus-circle"></i> New Tasks</button></li>
+        <li><button class="sidebar-menu-item" data-filter="in-progress"><i class="fa fa-spinner"></i> In Progress</button></li>
+        <li><button class="sidebar-menu-item" data-filter="completed"><i class="fa fa-check-circle"></i> Completed</button></li>
+        <li class="sidebar-section-header">Other</li>
+        <li><button class="sidebar-menu-item" data-filter="archived"><i class="fa fa-archive"></i> Archived</button></li>
+      </ul>
+    </nav>
+  </aside>
+  <!-- End Sidebar -->
+
+  <!-- Load other scripts -->
+  <script src="lib/jquery.min.js"></script>
+  <script src="lib/jquery-ui.min.js"></script>
+  <script src="lib/moment.min.js"></script>
+  <script src="resourcedash.min.js" defer></script>
+
+  <!-- Website Credit -->
+  <div class="website-credit" title="Created with Love by Reza">
+    <span class="credit-short"><i class="fa fa-heart"></i></span>
+    <span class="credit-full">Created with <i class="fa fa-heart"></i> by <a href="https://github.com/ezrarezaerza" target="_blank">Reza</a> | Inspired by Prioritab</span>
+  </div>
+
+  <!-- Help Button -->
+  <div class="help-button" title="View Instructions">
+    <span class="help-short">?</span>
+    <span class="help-full">Help</span>
+  </div>
+
+  <!-- Help Modal -->
+  <div id="help-modal" class="help-modal">
+    <div class="help-modal-content">
+      <div class="help-modal-header">
+        <h2>ResourceDash Features Guide</h2>
+        <button class="help-modal-close">&times;</button>
+      </div>
+      <div class="help-modal-body">
+        <section class="help-section">
+          <h3><i class="fa fa-clock-o"></i> Time & Progress</h3>
+          <ul>
+            <li>Real-time clock and date display</li>
+            <li>Track progress through day, month, and year</li>
+            <li>Visual progress bars for better time awareness</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3><i class="fa fa-sticky-note-o"></i> Notes & Tasks</h3>
+          <ul>
+            <li>Click "Take a note..." to create new notes or tasks</li>
+            <li>Use the toolbar for formatting (bold, italic, lists)</li>
+            <li>Add labels to organize your content</li>
+            <li>Track task progress: New → In Progress → Completed</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3><i class="fa fa-th"></i> Eisenhower Matrix</h3>
+          <ul>
+            <li>Categorize tasks by urgency and importance</li>
+            <li>Four quadrants: Urgent & Important, Important, Urgent, Neither</li>
+            <li>Helps prioritize your work effectively</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3><i class="fa fa-music"></i> Music Player</h3>
+          <ul>
+            <li>Click "MP" to open the music player</li>
+            <li>Add local music files to create playlists</li>
+            <li>Control playback: play/pause, next/previous, shuffle, repeat</li>
+            <li>Minimize to keep playing while working</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3><i class="fa fa-database"></i> Knowledge Base</h3>
+          <ul>
+            <li>Click "KB" to open the knowledge base</li>
+            <li>Create multiple tabs for different topics</li>
+            <li>Add, edit, and organize information in tables</li>
+            <li>Search and filter your stored knowledge</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3><i class="fa fa-bars"></i> Sidebar Features</h3>
+          <ul>
+            <li>Click the menu icon to open the sidebar</li>
+            <li>Filter notes by type, priority, or status</li>
+            <li>Search through all your notes and tasks</li>
+            <li>Quick access to different views</li>
+          </ul>
+        </section>
+
+        <section class="help-section">
+          <h3><i class="fa fa-moon-o"></i> Theme & Customization</h3>
+          <ul>
+            <li>Toggle between light and dark themes</li>
+            <li>Drag and drop notes to reorganize</li>
+            <li>Resize and arrange elements as needed</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
