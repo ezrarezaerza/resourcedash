@@ -2,7 +2,9 @@
 
 Transform your new tab into a powerful productivity hub with **ResourceDash** – the all-in-one browser extension designed to keep you organized, focused, and efficient.  
 
+
 ---
+
 
 ## ✨ Why ResourceDash?  
 
@@ -15,7 +17,9 @@ Tired of cluttered new tab pages? ResourceDash offers a **clean, customizable, a
 
 All this, while looking sleek in **light or dark mode**.  
 
+
 ---
+
 
 ## 🔥 Features  
 
@@ -29,20 +33,24 @@ All this, while looking sleek in **light or dark mode**.
 | **🌙 Dark/Light Mode**  | Switch themes to match your vibe.                                          |
 | **🔒 100% Private**    | All data stays on your device – no tracking, no cloud, no BS.              |
 
+
 ---
+
 
 ## 🛠️ Installation (60 Seconds)  
 
 1. **Clone the repo**:  
    ```bash
-   git clone https://github.com/yourusername/resourcedash.git
+   git clone https://github.com/ezrarezaerza/resourcedash.git
 2. **Open Chrome** → Go to chrome://extensions/.
 3. **Enable "Developer Mode"** (top-right toggle).
 4. **Click "Load Unpacked"** and select the resourcedash folder.
 
 **Done!** Open a new tab and start dominating your day.
 
+
 ---
+
 
 ## 🎯 Pro Tips
 - **Quick Task Entry:** Just type and hit Enter to add tasks instantly.
@@ -50,7 +58,9 @@ All this, while looking sleek in **light or dark mode**.
 - **Music Hotkeys:** Pause/play with Space when the player is focused.
 - **Theme Toggle:** Click the sun/moon icon to switch between light/dark mode.
 
+
 ---
+
 
 ## 🔒 Privacy First
 We don’t want your data – because it’s **yours**.
@@ -58,11 +68,15 @@ We don’t want your data – because it’s **yours**.
 - Zero external servers.
 - Zero excuses.
 
+
 ---
+
 
 ## 📜 License
 MIT License – go wild, fork it, tweak it, make it yours.
 
+
 ---
+
 
 Ready to supercharge your workflow? **Install ResourceDash today!** 🚀
